@@ -1,6 +1,8 @@
 #include <iostream>
 #include <order.hpp>
 #include <orderBook.hpp>
+#include <sstream>
+#include <string>
 
 #define ASSERT(condition, msg)                                                 \
     do {                                                                       \
@@ -17,8 +19,9 @@ const std::string GREEN_TEXT = "\033[32m";
 const std::string RESET_TEXT = "\033[0m";
 
 void testAddOrders() {
+    std::ostringstream tradestream;
     std::cout << "Running test: testAddOrders\n";
-    OrderBook orderBook;
+    OrderBook orderBook(tradestream);
     std::string book;
     book = orderBook.getOrderBook();
     bool init = (book == "Order Book:\n"
@@ -40,8 +43,9 @@ void testAddOrders() {
 }
 
 void testMatchOrders() {
+    std::ostringstream tradestream;
     std::cout << "Running test: testMatchOrders\n";
-    OrderBook orderBook;
+    OrderBook orderBook(tradestream);
     std::string book;
     book = orderBook.getOrderBook();
     bool init = (book == "Order Book:\n"
@@ -62,8 +66,27 @@ void testMatchOrders() {
     std::cout << GREEN_TEXT << "testMatchOrders Passed!" << RESET_TEXT << "\n";
 }
 
+void testOnTrade() {
+    std::ostringstream tradestream;
+    std::cout << "Running test: testOnTrade\n";
+    OrderBook orderBook(tradestream);
+    std::string book;
+    book = orderBook.getOrderBook();
+    orderBook.addOrder(BOOKTYPE::BUY, 100, 10);
+    orderBook.addOrder(BOOKTYPE::SELL, 95, 5);
+    std::string trade = tradestream.str();
+    bool final = (trade == "Trade executed:\n"
+                           "- Buy Order Id: 1\n"
+                           "- Sell Order Id: 2\n"
+                           "- Price: 100\n"
+                           "- Quantity: 5\n");
+    ASSERT(final, "Trade final records are wrong");
+    std::cout << GREEN_TEXT << "testOnTrade Passed!" << RESET_TEXT << "\n";
+}
+
 int main() {
     testAddOrders();
     testMatchOrders();
+    testOnTrade();
     return 0;
 }

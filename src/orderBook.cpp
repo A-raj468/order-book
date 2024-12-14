@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-OrderBook::OrderBook() : id{1} {}
+OrderBook::OrderBook(std::ostream &out) : out{out}, id{1} {}
 
 uint64_t OrderBook::addOrder(BOOKTYPE type, uint64_t price, uint64_t quantity) {
     Order order{id, type, price, quantity};
@@ -87,12 +87,10 @@ Order OrderBook::queryOrder(uint64_t id) {
     throw std::runtime_error("Querying of Orders is not supported yet");
 }
 
-std::string OrderBook::onTrade(Trade trade) {
-    std::ostringstream out;
+void OrderBook::onTrade(Trade trade) {
     out << "Trade executed:\n";
     out << "- Buy Order Id: " << trade.buyId << "\n";
     out << "- Sell Order Id: " << trade.sellId << "\n";
     out << "- Price: " << trade.price << "\n";
     out << "- Quantity: " << trade.quantity << "\n";
-    return out.str();
 }
