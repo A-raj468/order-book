@@ -21,12 +21,12 @@ struct Order {
     uint64_t quantity;
     uint64_t timestamp;
 
-    bool operator<(const Order &other) {
+    bool operator<(const Order &other) const {
         return (price < other.price) ||
                (price == other.price && timestamp < other.timestamp);
     }
 
-    bool operator>(const Order &other) {
+    bool operator>(const Order &other) const {
         return (price > other.price) ||
                (price == other.price && timestamp > other.timestamp);
     }

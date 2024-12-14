@@ -14,3 +14,10 @@ add_library(libOrderBook SHARED
 target_include_directories(libOrderBook PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+
+enable_testing()
+add_executable(orderBookTest
+    ${PROJECT_SOURCE_DIR}/test/tests.cpp)
+target_link_libraries(orderBookTest PRIVATE
+    libOrderBook)
+add_test(NAME OrderBooKTest COMMAND orderBookTest)

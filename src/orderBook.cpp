@@ -5,7 +5,9 @@
 #include <cstdint>
 #include <iostream>
 #include <queue>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 
 OrderBook::OrderBook() : id{1} {}
 
@@ -45,37 +47,39 @@ void OrderBook::matchOrder() {
         } else if (buy.quantity > sell.quantity) {
             quantity = sell.quantity;
             buy.quantity -= sell.quantity;
-            sellOrders.push(buy);
+            buyOrders.push(buy);
         }
         Trade trade{buy.id, sell.id, price, quantity};
         onTrade(trade);
     }
 }
 
-void OrderBook::getOrderBook() {
-    std::cout << "Order Book:\n";
-    std::cout << "Buy Orders:\n";
+std::string OrderBook::getOrderBook() {
+    std::ostringstream out;
+    out << "Order Book:\n";
+    out << "Buy Orders:\n";
     if (buyOrders.empty()) {
-        std::cout << "- None\n";
+        out << "- None\n";
     }
     auto buyOrders_copy = buyOrders;
     while (!buyOrders_copy.empty()) {
         Order top = buyOrders_copy.top();
-        std::cout << "Order ID: " << top.id << ", $" << top.price << " : "
-                  << top.quantity << " items";
+        out << "- Order ID: " << top.id << ", $" << top.price << " : "
+            << top.quantity << " items\n";
         buyOrders_copy.pop();
     }
-    std::cout << "Sell Orders:\n";
+    out << "Sell Orders:\n";
     if (sellOrders.empty()) {
-        std::cout << "- None\n";
+        out << "- None\n";
     }
     auto sellOrders_copy = sellOrders;
     while (!sellOrders_copy.empty()) {
         Order top = sellOrders_copy.top();
-        std::cout << "Order ID: " << top.id << ", $" << top.price << " : "
-                  << top.quantity << " items";
+        out << "- Order ID: " << top.id << ", $" << top.price << " : "
+            << top.quantity << " items\n";
         sellOrders_copy.pop();
     }
+    return out.str();
 }
 
 Order OrderBook::queryOrder(uint64_t id) {
@@ -83,10 +87,12 @@ Order OrderBook::queryOrder(uint64_t id) {
     throw std::runtime_error("Querying of Orders is not supported yet");
 }
 
-void OrderBook::onTrade(Trade trade) {
-    std::cout << "Trade executed:\n";
-    std::cout << "- Buy Order Id: " << trade.buyId << "\n";
-    std::cout << "- Sell Order Id: " << trade.sellId << "\n";
-    std::cout << "- Price: " << trade.price << "\n";
-    std::cout << "- Quantity: " << trade.quantity << "\n";
+std::string OrderBook::onTrade(Trade trade) {
+    std::ostringstream out;
+    out << "Trade executed:\n";
+    out << "- Buy Order Id: " << trade.buyId << "\n";
+    out << "- Sell Order Id: " << trade.sellId << "\n";
+    out << "- Price: " << trade.price << "\n";
+    out << "- Quantity: " << trade.quantity << "\n";
+    return out.str();
 }

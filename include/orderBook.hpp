@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <functional>
 #include <queue>
+#include <string>
 #include <vector>
 
 class OrderBook {
@@ -13,9 +14,9 @@ class OrderBook {
     uint64_t addOrder(BOOKTYPE type, uint64_t price, uint64_t quantity);
     bool cancelOrder(uint64_t id);
     void matchOrder();
-    void getOrderBook();
+    std::string getOrderBook();
     Order queryOrder(uint64_t id);
-    void onTrade(Trade trade);
+    std::string onTrade(Trade trade);
 
   private:
     uint64_t id;
